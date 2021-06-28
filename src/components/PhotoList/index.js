@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Modal from '../Modal';
 
 const PhotoList = ({ category }) => {
 
@@ -101,15 +102,26 @@ const PhotoList = ({ category }) => {
   ]);
 
   const currentPhotos = photos.filter((photo) => photo.category === category);
+  // state to monitor modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // monitors photo state
+  const [currentPhoto, setCurrentPhoto] = useState();
+  const toggleModal = (image, i) => { 
+    setCurrentPhoto({...image, index: i});
+    // sets value of isModalOpen by declaring it to the opposite value of what it is currently
+    setIsModalOpen(!isModalOpen);
+  }
 
   return (
     <div>
+      {isModalOpen && ( <Modal currentPhoto={currentPhoto} onClose={toggleModal}  /> )}
       <div className="flex-row">
         {currentPhotos.map((image, i) => (
           <img
             src={require(`../../assets/small/${category}/${i}.jpg`)}
             alt={image.name}
             className="img-thumbnail mx-1"
+            onClick={() => toggleModal(image, i)}
             key={image.name}
           />
         ))}
